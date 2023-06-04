@@ -1,5 +1,5 @@
 - name: Install Docker on Debian
-  hosts: all
+  hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
