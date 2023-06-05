@@ -68,9 +68,9 @@
 
     - name: Copy docker-compose file
       ansible.builtin.copy:
-        src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yaml"
+        src: "//C/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
-        remote_src: true
+        remote_src: yes
 
     - name: Start containers
       shell: docker-compose up -d
