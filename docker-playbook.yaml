@@ -68,9 +68,9 @@
 
     - name: Copy docker-compose file
       copy:
-        src: "C:\Users\SGumbe\DOCKER_IP\YOLO\docker-compose.yml"
+        src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yaml"
         dest: "{{ app_folder }}/docker-compose.yml"
-      
+        remote_src: true
 
     - name: Start containers
       shell: docker-compose up -d
