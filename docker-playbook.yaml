@@ -1,5 +1,15 @@
+- name: Copy docker-compose file from local machine to Ansible controller
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yaml"
+        dest: "/path/on/ansible/controller/docker-compose.yaml"
+
 - name: Install Docker on Debian
-  hosts: host1,host2
+  hosts: host1, host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
@@ -67,16 +77,12 @@
         state: directory
 
     - name: Copy docker-compose file
-      hosts: localhost
-      connection: local
-      gather_facts: false
-      tasks:
-        - name: Copy docker-compose file
-          ansible.builtin.copy:
-            src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yaml"
-            dest: "{{ app_folder }}/docker-compose.yml"
+      copy:
+        src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yml"
+        dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
+
