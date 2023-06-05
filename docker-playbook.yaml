@@ -67,8 +67,8 @@
         state: directory
 
     - name: Copy docker-compose file
-      template:
-        src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yml"
+      copy:
+        src: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
         remote_src: true
 
