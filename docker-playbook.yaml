@@ -72,6 +72,7 @@
         dest: "{{ app_folder }}/docker-compose.yml"
       remote_src: true
 
+
     - name: Start containers
       shell: docker-compose up -d
       args:
