@@ -68,7 +68,7 @@
 
     - name: Copy docker-compose file
       template:
-        src: ./../docker-compose.yml
+        src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
