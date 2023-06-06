@@ -4,6 +4,8 @@
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
     app_folder: /opt/yolo
+    local_docker_compose_path: "C:/Users/SGumbe/DOCKER_IP/YOLO/docker-compose.yml"
+    control_machine_docker_compose_path: "/tmp/docker-compose.yml"
   tasks:
     - name: Update the cache
       apt:
@@ -66,13 +68,22 @@
         path: "{{ app_folder }}"
         state: directory
 
+    - name: Fetch docker-compose file from local machine
+      fetch:
+        src: "{{ local_docker_compose_path }}"
+        dest: "{{ control_machine_docker_compose_path }}"
+        flat: yes
+      delegate_to: localhost
+
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yml"
+        src: "{{ control_machine_docker_compose_path }}"
         dest: "{{ app_folder }}/docker-compose.yml"
-      delegate_to: localhost
+      delegate_to: host1,host2
 
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
+        
+
