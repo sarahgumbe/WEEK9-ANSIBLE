@@ -1,24 +1,10 @@
 - name: Install Docker on Debian
-  hosts: localhost
+  hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
     app_folder: /opt/yolo
-    local_docker_compose_path: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yaml"
-    control_machine_docker_compose_path: "/tmp/docker-compose.yaml"
   tasks:
-    - name: Copy docker-compose file to control machine
-      copy:
-        src: "{{ local_docker_compose_path }}"
-        dest: "{{ control_machine_docker_compose_path }}"
-
-    - name: Copy docker-compose file to target hosts
-      copy:
-        src: "{{ control_machine_docker_compose_path }}"
-        dest: "{{ app_folder }}/docker-compose.yml"
-        mode: "0644"
-      delegate_to: localhost
-
     - name: Update the cache
       apt:
         update_cache: yes
@@ -80,8 +66,15 @@
         path: "{{ app_folder }}"
         state: directory
 
+    - name: Copy docker-compose file to virtual machine
+      hosts: host1,host2
+      tasks:
+        - name: Copy docker-compose file
+          copy:
+            src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yaml"
+            dest: "{{ app_folder }}/docker-compose.yml"
+
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
-
