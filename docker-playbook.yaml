@@ -66,13 +66,11 @@
         path: "{{ app_folder }}"
         state: directory
 
-    - name: Copy docker-compose file to virtual machine
-      hosts: host1,host2
-      tasks:
-        - name: Copy docker-compose file
-          copy:
-            src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yaml"
-            dest: "{{ app_folder }}/docker-compose.yml"
+    - name: Copy docker-compose file to target hosts
+      copy:
+        src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yml"
+        dest: "{{ app_folder }}/docker-compose.yml"
+      delegate_to: localhost
 
     - name: Start containers
       shell: docker-compose up -d
