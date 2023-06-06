@@ -8,9 +8,10 @@
     control_machine_docker_compose_path: "/tmp/docker-compose.yaml"
   tasks:
     - name: Copy docker-compose file to control machine
-      copy:
+      fetch:
         src: "{{ local_docker_compose_path }}"
         dest: "{{ control_machine_docker_compose_path }}"
+        flat: yes
 
     - name: Copy docker-compose file to target hosts
       copy:
@@ -84,4 +85,3 @@
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
-
