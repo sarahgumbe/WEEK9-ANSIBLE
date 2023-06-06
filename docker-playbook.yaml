@@ -4,7 +4,7 @@
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
     app_folder: /opt/yolo
-    local_docker_compose_path: "C:\Users\SGumbe\DOCKER_IP\YOLO\docker-compose.yml"
+    local_docker_compose_path: "C:\\\\Users\\\\SGumbe\\\\DOCKER_IP\\\\YOLO\\\\docker-compose.yml"
     control_machine_docker_compose_path: "/tmp/docker-compose.yaml"
   tasks:
     - name: Copy docker-compose file to control machine
