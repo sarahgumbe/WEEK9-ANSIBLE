@@ -1,5 +1,5 @@
 - name: Install Docker on Debian
-  hosts: localhost
+  hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
@@ -18,7 +18,7 @@
         src: "{{ control_machine_docker_compose_path }}"
         dest: "{{ app_folder }}/docker-compose.yml"
         mode: "0644"
-      delegate_to: localhost
+      delegate_to: host1,host2
 
     - name: Update the cache
       apt:
