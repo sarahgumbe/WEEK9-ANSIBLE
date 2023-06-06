@@ -66,7 +66,7 @@
         path: "{{ app_folder }}"
         state: directory
 
-    - name: Copy docker-compose file
+    - name: Copy docker-compose file to virtual machine
       hosts: host1,host2
       tasks:
         - name: Copy docker-compose file
