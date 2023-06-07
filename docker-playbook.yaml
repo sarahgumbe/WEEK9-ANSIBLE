@@ -68,14 +68,14 @@
 
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "~/tmp/docker-compose.yml"
+        src: "/home/gumbe12/tmp/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
-        
+
 
         
 
