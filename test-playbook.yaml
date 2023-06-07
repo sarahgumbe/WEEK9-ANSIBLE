@@ -68,9 +68,8 @@
 
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "C:\\Users\\SGumbe\\DOCKER_IP\\YOLO\\docker-compose.yml"
+        src: "~/tmp/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
-      delegate_to: localhost
 
     - name: Start containers
       shell: docker-compose up -d
