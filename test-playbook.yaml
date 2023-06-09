@@ -1,9 +1,11 @@
-- name: Install Docker on Debian
+- name: Install Docker on Debian 11
   hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
-    app_folder: /opt/yolo
+    app_folder: /opt/yolo/
+    compose_file_src: /home/gumbe12/tmp/docker-compose.yml
+    compose_file_dest: "{{ app_folder }}/docker-compose.yml"
   tasks:
     - name: Update the cache
       apt:
@@ -63,15 +65,20 @@
 
     - name: Create app folder
       file:
-        path: "{{ app_folder }}"
+        path: "{{ app_folder }}/client"
         state: directory
 
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "~/tmp/docker-compose.yml"
+        src: "/home/gumbe12/tmp/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
+
+
+        
+
+
