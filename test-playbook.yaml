@@ -65,19 +65,33 @@
 
     - name: Create app folder
       file:
-        path: "{{ app_folder }}/client"
+        path: "{{ app_folder }}"
         state: directory
 
+    - name: Create backend folder
+      file:
+        path: "{{ app_folder }}/backend"
+        state: directory
+
+    - name: Copy backend Dockerfile
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/Dockerfile
+        dest: "{{ app_folder }}/backend/Dockerfile"
+
+    - name: Copy backend environment file
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/.env
+        dest: "{{ app_folder }}/backend/.env"
+        
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "/home/gumbe12/tmp/docker-compose.yml"
+        src: "/home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
-
 
         
 
