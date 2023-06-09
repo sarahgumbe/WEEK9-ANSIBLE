@@ -3,7 +3,7 @@
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
-    app_folder: /opt/yolo/docker-compose.yml
+    app_folder: /opt/yolo/
     compose_file_src: /home/gumbe12/tmp/docker-compose.yml
     compose_file_dest: "{{ app_folder }}/docker-compose.yml"
   tasks:
