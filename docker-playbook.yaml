@@ -103,7 +103,7 @@
         networks:
           - name: my-network
 
-    -name: Print container status
+    - name: Print container status
       shell: docker ps -a --filter name=yolo-
       register: container_output
       changed_when: false
