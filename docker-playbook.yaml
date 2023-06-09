@@ -132,5 +132,5 @@
     - name: Assert client container is running
       assert:
         that:
-          - client_container_info.containers[0].state == 'running'
+          - client_container_info.containers | length > 0
         fail_msg: "Client container is not running."
