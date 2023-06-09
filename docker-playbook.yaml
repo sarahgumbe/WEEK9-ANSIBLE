@@ -85,7 +85,7 @@
         
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "/home/gumbe12/tmp/docker-compose.yml"
+        src: "/home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
     - name: Start containers
