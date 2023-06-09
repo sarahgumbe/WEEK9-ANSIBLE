@@ -20,6 +20,28 @@
           - curl
           - software-properties-common
           - python3-pip
+- name: Install Docker on Debian 11 & start the containers
+  hosts: host1,host2
+  vars:
+    client_image: sgumbe/yolo-latest:1.1.0
+    backend_image: sgumbe/yolo-latest:1.2.0
+    app_folder: /opt/yolo/
+    compose_file_src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml
+    compose_file_dest: "{{ app_folder }}/docker-compose.yml"
+  tasks:
+    - name: Update the cache
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install packages on Debian-based systems
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
           - virtualenv
           - python3-setuptools
         update_cache: yes
@@ -92,6 +114,33 @@
       shell: docker-compose up -d
       args:
         chdir: "{{ app_folder }}"
+      register: compose_output
+      changed_when: false
+
+    - name: Check if containers are running
+      shell: docker-compose ps --services --filter "status=running"
+      args:
+        chdir: "{{ app_folder }}"
+      register: container_output
+
+    - name: Print container status
+      debug:
+        var: container_output.stdout_lines
+
+    - name: Verify backend container status
+      assert:
+        that:
+          - "'backend' in container_output.stdout_lines"
+        fail_msg: "Backend container is not running."
+        success_msg: "Backend container is running."
+
+    - name: Verify client container status
+      assert:
+        that:
+          - "'client' in container_output.stdout_lines"
+        fail_msg: "Client container is not running."
+        success_msg: "Client container is running."
+
 
         
 
