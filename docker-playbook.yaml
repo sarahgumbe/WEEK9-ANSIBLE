@@ -100,8 +100,6 @@
           - "{{ app_folder }}/backend/.env:/app/.env"
           - "/app/node_modules"
         restart_policy: always
-        networks:
-          - name: my-network
 
     - name: Print container status
       shell: docker ps -a --filter name=yolo-
