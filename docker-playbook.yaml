@@ -1,4 +1,4 @@
-- name: Install Docker on Debian
+- name: Install Docker on Debian 11
   hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
@@ -65,7 +65,7 @@
 
     - name: Create app folder
       file:
-        path: "{{ app_folder }}"
+        path: "{{ app_folder }}/docker-compose.yml"
         state: directory
 
     - name: Copy docker-compose file to target hosts
