@@ -112,3 +112,25 @@
         that:
           - "'yolo-backend' in container_output.stdout"
         fail_msg: "Backend container is not running."
+
+    - name: Start client container
+      docker_container:
+        name: yolo-client
+        image: "{{ client_image }}"
+        ports:
+          - "3000:3000"
+        volumes:
+          - "{{ app_folder }}/client:/app"
+          - "/app/node_modules"
+        restart_policy: always
+    
+    - name: Verify client container status
+      docker_container_info:
+        name: yolo-client
+      register: client_container_info
+
+    - name: Assert client container is running
+      assert:
+        that:
+          - client_container_info.containers[0].state == 'running'
+        fail_msg: "Client container is not running."
