@@ -83,7 +83,7 @@
       copy:
         src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/.env
         dest: "{{ app_folder }}/backend/.env"
-        
+
     - name: Copy docker-compose file to target hosts
       copy:
         src: "{{ compose_file_src }}"
@@ -135,11 +135,10 @@
           - "{{ app_folder }}/client:/app"
           - "/app/node_modules"
         restart_policy: always
-    
+
     - name: Verify client container status
       docker_container_info:
         name: yolo-client
       register: client_container_info
 
-  
-s
+   
