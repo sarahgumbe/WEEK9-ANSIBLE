@@ -126,6 +126,12 @@
         dest: "{{ app_folder }}/client/public/index.html"
         mode: 0644
 
+    - name: Copy index.js to client container
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/src/index.js
+        dest: "{{ app_folder }}/client/src/index.js"
+        mode: 0644
+
     - name: Copy backend package.json
       copy:
         src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/package.json
