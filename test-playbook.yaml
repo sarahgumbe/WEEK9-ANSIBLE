@@ -1,26 +1,5 @@
-- name: Install Docker on Debian 11
-  hosts: host1,host2
-  vars:
-    client_image: sgumbe/yolo-latest:1.1.0
-    backend_image: sgumbe/yolo-latest:1.2.0
-    app_folder: /opt/yolo/
-    compose_file_src: /home/gumbe12/tmp/docker-compose.yml
-    compose_file_dest: "{{ app_folder }}/docker-compose.yml"
-  tasks:
-    - name: Update the cache
-      apt:
-        update_cache: yes
-        upgrade: yes
-
-    - name: Install packages on Debian-based systems
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-          - python3-pip
 - name: Install Docker on Debian 11 & start the containers
+  become: yes
   hosts: host1,host2
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
@@ -86,8 +65,7 @@
         source: pull
 
     - name: Create app folder
-      file:
-        path: "{{ app_folder }}"
+      file:path: "{{ app_folder }}"
         state: directory
 
     - name: Create backend folder
@@ -110,38 +88,43 @@
         src: "/home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml"
         dest: "{{ app_folder }}/docker-compose.yml"
 
-    - name: Start containers
-      shell: docker-compose up -d
-      args:
-        chdir: "{{ app_folder }}"
-      register: compose_output
-      changed_when: false
-
-    - name: Check if containers are running
-      shell: docker-compose ps --services --filter "status=running"
-      args:
-        chdir: "{{ app_folder }}"
-      register: container_output
+    - name: Start backend container
+      docker_container:
+        name: yolo-backend
+        image: "{{ backend_image }}"
+        ports:
+          - "5000:5000"
+        volumes:
+          - "{{ app_folder }}/backend:/app"
+          - "{{ app_folder }}/backend/.env:/app/.env"
+          - "/app/node_modules"
+        restart_policy: always
 
     - name: Print container status
-      debug:
-        var: container_output.stdout_lines
+      shell: docker ps -a --filter name=yolo-
+      register: container_output
+      changed_when: false
+      failed_when: false
 
     - name: Verify backend container status
       assert:
         that:
-          - "'backend' in container_output.stdout_lines"
+          - "'yolo-backend' in container_output.stdout"
         fail_msg: "Backend container is not running."
-        success_msg: "Backend container is running."
 
+    - name: Start client container
+      docker_container:
+        name: yolo-client
+        image: "{{ client_image }}"
+        ports:
+          - "3000:3000"
+        volumes:
+          - "{{ app_folder }}/client:/app"
+          - "/app/node_modules"
+        restart_policy: always
+    
     - name: Verify client container status
-      assert:
-        that:
-          - "'client' in container_output.stdout_lines"
-        fail_msg: "Client container is not running."
-        success_msg: "Client container is running."
-
-
-        
-
+      docker_container_info:
+        name: yolo-client
+      register: client_container_info
 

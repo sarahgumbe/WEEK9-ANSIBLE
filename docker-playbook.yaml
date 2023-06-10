@@ -86,8 +86,20 @@
         
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "/home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml"
-        dest: "{{ app_folder }}/docker-compose.yml"
+        src: "{{ compose_file_src }}"
+        dest: "{{ compose_file_dest }}"
+
+    - name: Copy client package.json
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/package.json
+        dest: "{{ app_folder }}/client/package.json"
+        mode: 0644
+
+    - name: Copy backend package.json
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/package.json
+        dest: "{{ app_folder }}/backend/package.json"
+        mode: 0644
 
     - name: Start backend container
       docker_container:
@@ -129,3 +141,5 @@
         name: yolo-client
       register: client_container_info
 
+  
+s
