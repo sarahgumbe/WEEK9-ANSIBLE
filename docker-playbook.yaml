@@ -74,6 +74,26 @@
         path: "{{ app_folder }}/backend"
         state: directory
 
+    - name: Create app directory for client container
+      docker_container:
+        name: yolo-client
+        image: "{{ client_image }}"
+        command: "mkdir -p /app"
+        state: started
+        volumes:
+          - "{{ app_folder }}/client:/app"
+        restart_policy: always
+
+    - name: Create app directory for backend container
+      docker_container:
+        name: yolo-backend
+        image: "{{ backend_image }}"
+        command: "mkdir -p /app"
+        state: started
+        volumes:
+          - "{{ app_folder }}/backend:/app"
+        restart_policy: always
+
     - name: Copy backend Dockerfile
       copy:
         src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/Dockerfile
@@ -140,5 +160,3 @@
       docker_container_info:
         name: yolo-client
       register: client_container_info
-
-   
