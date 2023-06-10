@@ -94,6 +94,13 @@
           - "{{ app_folder }}/backend:/app"
         restart_policy: always
 
+    - name: Create client directories
+      file:
+        path: "{{ app_folder }}/client/{{ item }}"
+        state: directory
+      loop:
+        - src
+
     - name: Copy backend Dockerfile
       copy:
         src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/Dockerfile
