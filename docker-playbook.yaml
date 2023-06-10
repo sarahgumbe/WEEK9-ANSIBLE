@@ -121,6 +121,12 @@
         dest: "{{ app_folder }}/backend/package.json"
         mode: 0644
 
+    - name: Copy index.html to client container
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/public/index.html
+        dest: "{{ app_folder }}/client/public/index.html"
+        mode: 0644
+
     - name: Start backend container
       docker_container:
         name: yolo-backend
