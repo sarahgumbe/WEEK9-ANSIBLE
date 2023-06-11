@@ -1,11 +1,12 @@
 version: '3.3'
 
 services:
+  client:
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./client:/app
       - /app/node_modules
@@ -14,12 +15,12 @@ services:
     networks:
       - my-network
 
-backend:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - 5000:5000
     volumes:
       - ./backend:/app
       - ./backend/.env:/app/.env
