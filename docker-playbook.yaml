@@ -181,6 +181,29 @@
         restart_policy: always
 
     - name: Verify client container status
-      docker_container_info:
-        name: yolo-client
-      register: client_container_info
+      assert:
+        that:
+          - "'yolo-client' in container_output.stdout"
+        fail_msg: "Client container is not running."
+
+    - name: Start Docker containers
+      command: docker-compose up -d
+      args:
+        chdir: "{{ app_folder }}"
+
+    - name: Verify containers are running
+      shell: docker-compose ps
+      register: compose_output
+
+    - name: Verify backend container status
+      assert:
+        that:
+          - "'yolo-backend' in compose_output.stdout"
+        fail_msg: "Backend container is not running."
+
+    - name: Verify client container status
+      assert:
+        that:
+          - "'yolo-client' in compose_output.stdout"
+        fail_msg: "Client container is not running."
+

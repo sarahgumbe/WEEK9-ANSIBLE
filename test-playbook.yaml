@@ -4,7 +4,7 @@
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
-    app_folder: /opt/yolo/
+    app_folder: /opt/yolo
     compose_file_src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml
     compose_file_dest: "{{ app_folder }}/docker-compose.yml"
   tasks:
@@ -65,13 +65,41 @@
         source: pull
 
     - name: Create app folder
-      file:path: "{{ app_folder }}"
+      file:
+        path: "{{ app_folder }}"
         state: directory
 
     - name: Create backend folder
       file:
         path: "{{ app_folder }}/backend"
         state: directory
+
+    - name: Create app directory for client container
+      docker_container:
+        name: yolo-client
+        image: "{{ client_image }}"
+        command: "mkdir -p /app"
+        state: started
+        volumes:
+          - "{{ app_folder }}/client:/app"
+        restart_policy: always
+
+    - name: Create app directory for backend container
+      docker_container:
+        name: yolo-backend
+        image: "{{ backend_image }}"
+        command: "mkdir -p /app"
+        state: started
+        volumes:
+          - "{{ app_folder }}/backend:/app"
+        restart_policy: always
+
+    - name: Create client directories
+      file:
+        path: "{{ app_folder }}/client/{{ item }}"
+        state: directory
+      loop:
+        - src
 
     - name: Copy backend Dockerfile
       copy:
@@ -82,11 +110,40 @@
       copy:
         src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/.env
         dest: "{{ app_folder }}/backend/.env"
-        
+
     - name: Copy docker-compose file to target hosts
       copy:
-        src: "/home/gumbe12/WEEK9-ANSIBLE/YOLO/docker-compose.yml"
-        dest: "{{ app_folder }}/docker-compose.yml"
+        src: "{{ compose_file_src }}"
+        dest: "{{ compose_file_dest }}"
+
+    - name: Create client public directory
+      file:
+        path: "{{ app_folder }}/client/public"
+        state: directory
+
+    - name: Copy client package.json
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/package.json
+        dest: "{{ app_folder }}/client/package.json"
+        mode: 0644
+
+    - name: Copy index.html to client container
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/public/index.html
+        dest: "{{ app_folder }}/client/public/index.html"
+        mode: 0644
+
+    - name: Copy index.js to client container
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/client/src/index.js
+        dest: "{{ app_folder }}/client/src/index.js"
+        mode: 0644
+
+    - name: Copy backend package.json
+      copy:
+        src: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend/package.json
+        dest: "{{ app_folder }}/backend/package.json"
+        mode: 0644
 
     - name: Start backend container
       docker_container:
@@ -122,9 +179,8 @@
           - "{{ app_folder }}/client:/app"
           - "/app/node_modules"
         restart_policy: always
-    
+
     - name: Verify client container status
       docker_container_info:
         name: yolo-client
       register: client_container_info
-
