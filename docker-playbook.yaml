@@ -1,6 +1,7 @@
 - name: Install Docker on Debian 11 & start the containers
   become: yes
-  hosts: host1
+  hosts: 34.27.116.156
+
   vars:
     client_image: sgumbe/yolo-latest:1.1.0
     backend_image: sgumbe/yolo-latest:1.2.0
