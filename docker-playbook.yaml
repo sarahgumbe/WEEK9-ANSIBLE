@@ -180,6 +180,7 @@
           - "{{ app_folder }}/client:/app"
           - "/app/node_modules"
         restart_policy: always
+        timeout: 120
 
     - name: Verify client container status
       assert:
