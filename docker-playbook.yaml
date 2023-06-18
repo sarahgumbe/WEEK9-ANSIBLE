@@ -190,9 +190,10 @@
         fail_msg: "Client container is not running."
 
     - name: Start Docker containers
-      command: docker-compose up -d
+      command: docker-compose -f "{{ compose_file_dest }}" up -d
       args:
         chdir: "{{ app_folder }}"
+      become: no
 
     - name: Verify containers are running
       shell: docker-compose ps
