@@ -118,11 +118,6 @@
         src: "{{ compose_file_src }}"
         dest: "{{ compose_file_dest }}"
 
-    - name: Start Docker Compose services
-      command: docker-compose up -d
-      args:
-        chdir: "{{ app_folder }}"
-
     - name: Wait for containers to start
       wait_for:
         host: localhost
