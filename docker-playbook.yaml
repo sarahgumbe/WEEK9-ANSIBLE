@@ -143,6 +143,7 @@
           - "{{ app_folder }}/backend/.env:/app/.env"
           - "/app/node_modules"
         restart_policy: always
+        timeout: 120
 
     - name: Print Docker container status
       command: docker ps -a
