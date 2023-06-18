@@ -118,18 +118,30 @@
         src: "{{ compose_file_src }}"
         dest: "{{ compose_file_dest }}"
 
-    - name: Wait for containers to start
-      wait_for:
-        host: localhost
-        port: 3000
-        delay: 5
-        timeout: 180
-        state: started
+    - name: Create client container
+      docker_container:
+        name: yolo-client
+        image: "{{ client_image }}"
+        command: npm start
+        ports:
+          - "3000:3000"
+        volumes:
+          - "{{ app_folder }}/client:/app"
+          - "/app/node_modules"
+        restart_policy: always
 
-    - name: Check if containers started successfully
-      assert:
-        that: "'yolo-client' in docker_output.stdout and 'yolo-backend' in docker_output.stdout"
-        fail_msg: "Containers failed to start."
+    - name: Create backend container
+      docker_container:
+        name: yolo-backend
+        image: "{{ backend_image }}"
+        command: npm start
+        ports:
+          - "5000:5000"
+        volumes:
+          - "{{ app_folder }}/backend:/app"
+          - "{{ app_folder }}/backend/.env:/app/.env"
+          - "/app/node_modules"
+        restart_policy: always
 
     - name: Print Docker container status
       command: docker ps -a
@@ -146,3 +158,5 @@
         that:
           - "'yolo-client' in docker_output.stdout"
         fail_msg: "Client container is not running."
+
+    
