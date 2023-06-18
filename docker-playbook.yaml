@@ -194,6 +194,9 @@
       args:
         chdir: "{{ app_folder }}"
       become: no
+      vars:
+        compose_file_dest: "/opt/yolo/docker-compose.yml"
+        app_folder: "/opt/yolo"
 
     - name: Verify containers are running
       shell: docker-compose ps
