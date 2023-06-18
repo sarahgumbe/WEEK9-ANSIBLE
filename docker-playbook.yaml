@@ -193,7 +193,7 @@
       command: docker-compose -f "{{ compose_file_dest }}" up -d
       args:
         chdir: "{{ app_folder }}"
-      become: no
+      become: yes
       vars:
         compose_file_dest: "/opt/yolo/docker-compose.yml"
         app_folder: "/opt/yolo"
