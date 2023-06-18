@@ -213,4 +213,3 @@
         that:
           - "'yolo-client' in compose_output.stdout"
         fail_msg: "Client container is not running."
-

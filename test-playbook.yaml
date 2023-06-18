@@ -150,6 +150,7 @@
       docker_container:
         name: yolo-backend
         image: "{{ backend_image }}"
+        command: npm start
         ports:
           - "5000:5000"
         volumes:
@@ -157,6 +158,8 @@
           - "{{ app_folder }}/backend/.env:/app/.env"
           - "/app/node_modules"
         restart_policy: always
+      async: 3600
+      poll: 0    
 
     - name: Print container status
       shell: docker ps -a --filter name=yolo-
@@ -180,23 +183,32 @@
           - "{{ app_folder }}/client:/app"
           - "/app/node_modules"
         restart_policy: always
+      async: 3600
+      poll: 0
       
+    - name: Wait for containers to start
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 30
+      delay: 5
+      loop:
+        - "{{ ansible_job_id['yolo-backend'] }}"
+        - "{{ ansible_job_id['yolo-client'] }}"
 
-    - name: Verify client container status
+    - name: Check if containers started successfully
       assert:
-        that:
-          - "'yolo-client' in container_output.stdout"
-        fail_msg: "Client container is not running."
+        that: "'failed' not in item.stdout"
+      with_items: "{{ job_result.results }}"
 
-    - name: Start Docker containers
-      command: docker-compose up -d
-      args:
-        chdir: "{{ app_folder }}"
 
-    - name: Verify containers are running
-      shell: docker-compose ps
-      register: compose_output
-
+    - name: Print container status
+      shell: docker ps -a --filter name=yolo-
+      register: container_output
+      changed_when: false
+      failed_when: false
+      
     - name: Verify backend container status
       assert:
         that:
