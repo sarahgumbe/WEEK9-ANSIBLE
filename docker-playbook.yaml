@@ -180,7 +180,8 @@
           - "{{ app_folder }}/client:/app"
           - "/app/node_modules"
         restart_policy: always
-      
+      async: 120
+      poll: 0  
 
     - name: Verify client container status
       assert:
