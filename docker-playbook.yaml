@@ -131,6 +131,11 @@
         restart_policy: always
         timeout: 120
 
+    - name: Start the server
+      command: npm run start
+      args:
+        chdir: /home/gumbe12/WEEK9-ANSIBLE/YOLO/backend
+
     - name: Create backend container
       docker_container:
         name: yolo-backend
