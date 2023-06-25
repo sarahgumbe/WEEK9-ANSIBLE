@@ -1,0 +1,16 @@
+ - name: Provision and Configure Environment
+  hosts: host1
+  become: yes
+
+  tasks:
+    # Step 1: Call the Terraform module to provision resources
+    - name: Provision Resources using Terraform
+      terraform:
+        # Specify the path to your Terraform scripts directory
+        # Adjust the path if necessary
+        project_path: ../terraform
+
+    # Step 2: Invoke the Docker playbook for server configuration
+    - name: Configure Server using Docker playbook
+      import_playbook: docker-playbook.yaml
+
