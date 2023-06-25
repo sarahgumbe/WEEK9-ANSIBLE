@@ -17,6 +17,6 @@ variable "token" {
 
 variable "project_id" {
   type    = string
-  default = ""
+  default = "week9-ansible"
 }
 
